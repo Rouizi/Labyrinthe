@@ -1,7 +1,34 @@
-def carte(document):
-    with open(document, 'r') as fichier:
-        contenu = fichier.read()
-    return contenu
+def labyrinthe(fichier):
+    Labyrinthe = []
+    with open(fichier, 'r') as une_carte:
+        for line in une_carte:
+            liste = line.strip()
+            Labyrinthe.append(list(liste))
+    return Labyrinthe
+
+def choisir_direction():
+    direction = input('entrez une direction: n(nord), s(sud)'
+                              'e(est), o(ouest): ').lower()
+    if len(direction)>1 or not direction.isalpha():
+        print("Vous n'avez pas saisi une lettre valide.")
+        return choisir_direction()
+    else:
+        return direction
+
+def position_robot(un_labyrinthe):
+    for index_line, line in enumerate(un_labyrinthe):
+        for index_column, column in enumerate(line):
+            if column == 'X':
+                l, c = index_line, index_column
+    return l, c
+
+def verification_direction(un_labyrinthe, line, column):
+    if un_labyrinthe[line][column] == 'O':
+        print("vous ne pouvez aller par là")
+        return direction
+
+
+
 
 continuer_partie = True
 
@@ -17,9 +44,36 @@ while continuer_partie:
         except ValueError:
             print("vous n'avez pas saisi de nombre.")
         if numero == 1:
-            print(carte('facile.txt'))
+            Labyrinthe = labyrinthe('facile.txt')
+            for line in Labyrinthe:
+                chaine = ''.join(line)
+                print(chaine)
+            direction = choisir_direction()
+            if direction == 'e':
+                line, column = position_robot(Labyrinthe)
+                verification_deplaction(Labyrinthe, line, column-1)
+            if direction == 'o':
+                pass
+            if direction == 'n':
+                pass
+            if direction == 's':
+                pass
+
+
             break
         if numero == 2:
-            pass
+            Labyrinthe = labyrinthe('prison.txt')
+            for line in Labyrinthe:
+                chaine = ''.join(line)
+                print(chaine)
+            direction = choisir_direction()
+            if direction == 'e':
+                pass
+            if direction == 'o':
+                pass
+            if direction == 'n':
+                pass
+            if direction == 's':
+                pass
             break
 

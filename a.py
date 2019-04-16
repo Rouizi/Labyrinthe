@@ -1,14 +1,9 @@
-nombre_mise = -1
-while nombre_mise < 0 or nombre_mise > 49:
-    nombre_mise = input("Tapez le nombre sur lequel vous voulez miser (entre 0 et 49) : ")
-    # On convertit le nombre misé
-    try:
-        nombre_mise = int(nombre_mise)
-    except ValueError:
-        print("Vous n'avez pas saisi de nombre")
-        nombre_mise = -1
-        continue
-    if nombre_mise < 0:
-        print("Ce nombre est négatif")
-    if nombre_mise > 49:
-        print("Ce nombre est supérieur à 49")
+def carte(fichier):
+    with open(fichier, 'r') as une_carte:
+        contenu = une_carte.read()
+    return contenu
+
+def labyrinthe(fichier):
+    L = []
+    for l in carte(fichier):
+        L.append(l)
