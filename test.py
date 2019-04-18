@@ -33,19 +33,6 @@ def labyrinthe_sans_perso(un_labyrinthe, perso):
                 un_labyrinthe[index_line][index_column] = ' '
     return un_labyrinthe
 
-def verfivier_position(un_labyrinthe, line, column, x, y):
-    if un_labyrinthe[line + y][column + x] == 'O':
-        print("vous ne pouvez pas aller par là")
-        direction = choisir_direction()
-    if un_labyrinthe[line + y][column + x] == '.':
-        un_labyrinthe[line][column] = ' '
-        un_labyrinthe[line + y][column + x] = 'X'
-        afficher_labyrinthe(un_labyrinthe)
-    if un_labyrinthe[line + y][column + x] == ' ':
-        un_labyrinthe[line][column] = ' '
-        un_labyrinthe[line + y][column + x] = 'X'
-        afficher_labyrinthe(un_labyrinthe)
-
 
 continuer_partie = True
 
@@ -60,175 +47,78 @@ while continuer_partie:
             numero = int(numero)
         except ValueError:
             print("vous n'avez pas saisi de nombre.")
+            continue
         if numero == 1:
-            Labyrinthe = labyrinthe('facile.txt')
-            afficher_labyrinthe(Labyrinthe)
-            deplacement = True
-            while deplacement:
-                direction = choisir_direction()
-                perso = 'X'
-                if direction == 'e':
-                    line, column = position_robot(Labyrinthe, perso)
-                    if Labyrinthe[line][column + 1] == 'O':
-                        print("vous ne pouvez pas aller par là")
-                        continue
-                    if Labyrinthe[line][column + 1] == '.':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line][column + 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line][column + 1] == ' ':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line][column + 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line][column + 1] == 'U':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line][column + 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
+            carte = 'facile.txt'
+        elif numero == 2:
+            carte = 'prison.txt'
+        Labyrinthe = labyrinthe(carte)
+        afficher_labyrinthe(Labyrinthe)
+        deplacement = True
+        while deplacement:
+            direction = choisir_direction()
+            perso = 'X'
+            if direction == 'e':
+                line, column = position_robot(Labyrinthe, perso)
+                if Labyrinthe[line][column + 1] == 'O':
+                    print("vous ne pouvez pas aller par là")
+                    continue
+                if Labyrinthe[line][column + 1] == '.' or \
+                   Labyrinthe[line][column + 1] == ' ' or \
+                   Labyrinthe[line][column + 1] == 'X' or \
+                   Labyrinthe[line][column + 1] == 'U':
+                    Labyrinthe = labyrinthe_sans_perso(labyrinthe(carte), perso)
+                    Labyrinthe[line][column + 1] = 'X'
+                    afficher_labyrinthe(Labyrinthe)
+                    if labyrinthe_sans_perso(labyrinthe(carte), perso)[line][column + 1] == 'U':
                         print("BRAVO vous vaez gagnez !!!")
                         deplacement = False
-                if direction == 'o':
-                    line, column = position_robot(Labyrinthe, perso)
-                    if Labyrinthe[line][column - 1] == 'O':
-                        print("vous ne pouvez pas aller par là")
-                        continue
-                    if Labyrinthe[line][column - 1] == '.':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line][column - 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line][column - 1] == ' ':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line][column - 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line][column - 1] == 'U':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line][column - 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
+            elif direction == 'o':
+                line, column = position_robot(Labyrinthe, perso)
+                if Labyrinthe[line][column - 1] == 'O':
+                    print("vous ne pouvez pas aller par là")
+                    continue
+                if Labyrinthe[line][column - 1] == '.' or \
+                   Labyrinthe[line][column - 1] == ' ' or \
+                   Labyrinthe[line][column - 1] == 'X':
+                    Labyrinthe = labyrinthe_sans_perso(labyrinthe(carte), perso)
+                    Labyrinthe[line][column - 1] = 'X'
+                    afficher_labyrinthe(Labyrinthe)
+                    if labyrinthe_sans_perso(labyrinthe(carte), perso)[line][column - 1] == 'U':
                         print("BRAVO vous vaez gagnez !!!")
                         deplacement = False
-                if direction == 'n':
-                    line, column = position_robot(Labyrinthe, perso)
-                    if Labyrinthe[line - 1][column] == 'O':
-                        print("vous ne pouvez pas aller par là")
-                        continue
-                    if Labyrinthe[line - 1][column] == '.':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line - 1][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line - 1][column] == ' ':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line - 1][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line - 1][column] == 'U':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line - 1][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
+            elif direction == 'n':
+                line, column = position_robot(Labyrinthe, perso)
+                if Labyrinthe[line - 1][column] == 'O':
+                    print("vous ne pouvez pas aller par là")
+                    continue
+                if Labyrinthe[line - 1][column] == '.' or \
+                   Labyrinthe[line - 1][column] == ' ' or \
+                   Labyrinthe[line - 1][column] == 'X' or \
+                   Labyrinthe[line - 1][column] == 'U':
+                    Labyrinthe = labyrinthe_sans_perso(labyrinthe(carte), perso)
+                    Labyrinthe[line - 1][column] = 'X'
+                    afficher_labyrinthe(Labyrinthe)
+                    if labyrinthe_sans_perso(labyrinthe(carte), perso)[line + 1][column] == 'U':
                         print("BRAVO vous vaez gagnez !!!")
                         deplacement = False
-                if direction == 's':
-                    line, column = position_robot(Labyrinthe, perso)
-                    if Labyrinthe[line + 1][column] == 'O':
-                        print("vous ne pouvez pas aller par là")
-                        continue
-                    if Labyrinthe[line + 1][column] == '.':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line + 1][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line + 1][column] == ' ':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line + 1][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line + 1][column] == 'U':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('facile.txt'), perso)
-                        Labyrinthe[line + 1][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
+            elif direction == 's':
+                line, column = position_robot(Labyrinthe, perso)
+                if Labyrinthe[line + 1][column] == 'O':
+                    print("vous ne pouvez pas aller par là")
+                    continue
+                if Labyrinthe[line + 1][column] == '.' or \
+                   Labyrinthe[line + 1][column] == ' ' or \
+                   Labyrinthe[line + 1][column] == 'X' or \
+                   Labyrinthe[line + 1][column] == 'U':
+                    Labyrinthe = labyrinthe_sans_perso(labyrinthe(carte), perso)
+                    Labyrinthe[line + 1][column] = 'X'
+                    afficher_labyrinthe(Labyrinthe)
+                    if labyrinthe_sans_perso(labyrinthe(carte), perso)[line + 1][column] == 'U':
                         print("BRAVO vous vaez gagnez !!!")
                         deplacement = False
-                else:
-                        print("vous n'avez pas saisi une direction valide")
+            else:
+                    print("vous n'avez pas saisi une direction valide")
 
-        if numero == 2:
-            Labyrinthe = labyrinthe('prison.txt')
-            afficher_labyrinthe(Labyrinthe)
-            deplacement = True
-            while deplacement:
-                direction = choisir_direction()
-                perso = 'X'
-                if direction == 'e':
-                    line, column = position_robot(Labyrinthe, perso)
-                    if Labyrinthe[line][column + 1] == 'O':
-                        print("vous ne pouvez pas aller par là")
-                        continue
-                    if Labyrinthe[line][column + 1] == '.':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line][column + 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line][column + 1] == ' ':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line][column + 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line][column + 1] == 'U':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line][column + 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                        print("BRAVO vous vaez gagnez !!!")
-                        deplacement = False
-                if direction == 'o':
-                    line, column = position_robot(Labyrinthe, perso)
-                    if Labyrinthe[line][column - 1] == 'O':
-                        print("vous ne pouvez pas aller par là")
-                        continue
-                    if Labyrinthe[line][column - 1] == '.':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line][column - 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line][column - 1] == ' ':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line][column - 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line][column - 1] == 'U':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line][column - 1] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                        print("BRAVO vous vaez gagnez !!!")
-                        deplacement = False
-                if direction == len(direction) * 'n':
-                    line, column = position_robot(Labyrinthe, perso)
-                    if Labyrinthe[line - len(direction)][column] == 'O':
-                        print("vous ne pouvez pas aller par là")
-                        continue
-                    if Labyrinthe[line - len(direction)][column] == '.':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line - len(direction)][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line - len(direction)][column] == ' ':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line - len(direction)][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line - len(direction)][column] == 'U':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line - len(direction)][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                        print("BRAVO vous vaez gagnez !!!")
-                        deplacement = False
-                if direction == len(direction) * 's':
-                    line, column = position_robot(Labyrinthe, perso)
-                    if Labyrinthe[line + 1][column] == 'O':
-                        print("vous ne pouvez pas aller par là")
-                        continue
-                    if Labyrinthe[line + len(direction)][column] == '.':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line + len(direction)][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line + len(direction)][column] == ' ':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line + len(direction)][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                    if Labyrinthe[line + len(direction)][column] == 'U':
-                        Labyrinthe = labyrinthe_sans_perso(labyrinthe('prison.txt'), perso)
-                        Labyrinthe[line + len(direction)][column] = 'X'
-                        afficher_labyrinthe(Labyrinthe)
-                        print("BRAVO vous vaez gagnez !!!")
-                        deplacement = False
-                else:
-                        print("vous n'avez pas saisi une direction valide")
+
 
