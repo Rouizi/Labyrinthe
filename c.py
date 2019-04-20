@@ -1,5 +1,5 @@
-import pickle
 import os
+import pickle
 
 def labyrinthe(fichier):
     Labyrinthe = []
@@ -9,12 +9,17 @@ def labyrinthe(fichier):
             Labyrinthe.append(list(liste))
     return Labyrinthe
 
-
 def afficher_labyrinthe(labyrinthe):
     for line in labyrinthe:
         print(''.join(line))
 
+def enregistrer_labyrinthe(carte):
+    """Cette fonction se charge d'enregistrer le labyrinthe dans le fichier
+    labyrinthe. Elle reçoit en paramètre la carte à enregistrer."""
 
+    with open('labyrinthe', "wb") as fichier_labyrinthe:
+        mon_pickler = pickle.Pickler(fichier_labyrinthe)
+        mon_pickler.dump(carte)
 
 def choisir_direction():
     direction = input('Entrez une commande: N(Nord), S(Sud), E(Est), O(Ouest),' 
@@ -42,14 +47,11 @@ def choisir_direction():
 
 
 def position_robot(un_labyrinthe, wanted):
-    global c, l
     for index_line, line in enumerate(un_labyrinthe):
         for index_column, column in enumerate(line):
             if column == wanted:
                 l, c = index_line, index_column
     return l, c
-
-
 
 def labyrinthe_sans_perso(un_labyrinthe, perso):
     for index_line, line in enumerate(un_labyrinthe):
@@ -62,19 +64,14 @@ def labyrinthe_sans_perso(un_labyrinthe, perso):
 continuer_partie = True
 
 while continuer_partie:
-    cartes = []
     print("Labyrinthes existants :")
+    nom_carte = []
     for i, nom_fichier in enumerate(os.listdir("cartes")):
         print(f"  {i + 1} - {nom_fichier}")
         if nom_fichier.endswith(".txt"):
             chemin = os.path.join("cartes", nom_fichier)
-            Labyrinthe = []
-            with open(chemin, "r") as fichier:
-                for line in fichier:
-                    liste = line.strip()
-                    Labyrinthe.append(list(liste))
-                    cartes.append(Labyrinthe)
-
+            nom_carte.append(chemin)
+    print(nom_carte)
     choix_labyrinthe = True
 
     while choix_labyrinthe:
@@ -82,7 +79,7 @@ while continuer_partie:
 
         try:
             numero = int(numero)
-            if numero > len(cartes):
+            if numero > len(nom_carte):
                 print("Vous avez entrée un numéro invalide")
                 continue
             elif numero <= 0:
@@ -91,8 +88,10 @@ while continuer_partie:
         except ValueError:
             print("Vous n'avez pas saisi de nombre")
             continue
-        Labyrinthe = cartes[0]
-        afficher_labyrinthe(cartes[0])
+
+        carte = nom_carte[numero - 1]
+        Labyrinthe = labyrinthe(carte)
+        afficher_labyrinthe(Labyrinthe)
         deplacement = True
         while deplacement:
             direction = choisir_direction()
@@ -110,13 +109,13 @@ while continuer_partie:
                 for i in range(n + 1):
                     liste_du_parcour.append(Labyrinthe[line][column + i])
                 if 'O' in liste_du_parcour:
-                    print("Vous ne pouvez pas aller par là, il y'a un mur")
+                    print("Vous ne pouvez pas faire ça, il y'a un mur")
                     continue
                 else:
-                    Labyrinthe = labyrinthe_sans_perso(cartes[0], perso)
+                    Labyrinthe = labyrinthe_sans_perso(labyrinthe(carte), perso)
                     Labyrinthe[line][column + n] = 'X'
                     afficher_labyrinthe(Labyrinthe)
-                    if labyrinthe_sans_perso(cartes[0], perso)[line][column + n] == 'U':
+                    if labyrinthe_sans_perso(labyrinthe(carte), perso)[line][column + n] == 'U':
                         print("BRAVO vous vaez gagnez !!!")
                         deplacement = False
                         choix_labyrinthe = False
@@ -129,13 +128,13 @@ while continuer_partie:
                 for i in range(n + 1):
                     liste_du_parcour.append(Labyrinthe[line][column - i])
                 if 'O' in liste_du_parcour:
-                    print("Vous ne pouvez pas aller par là, il y'a un mur")
+                    print("Vous ne pouvez pas faire ça, il y'a un mur")
                     continue
                 else:
-                    Labyrinthe = labyrinthe_sans_perso(cartes[0], perso)
+                    Labyrinthe = labyrinthe_sans_perso(labyrinthe(carte), perso)
                     Labyrinthe[line][column - n] = 'X'
                     afficher_labyrinthe(Labyrinthe)
-                    if labyrinthe_sans_perso(cartes[0], perso)[line][column - n] == 'U':
+                    if labyrinthe_sans_perso(labyrinthe(carte), perso)[line][column - n] == 'U':
                         print("BRAVO vous vaez gagnez !!!")
                         deplacement = False
                         choix_labyrinthe = False
@@ -148,13 +147,13 @@ while continuer_partie:
                 for i in range(n + 1):
                     liste_du_parcour.append(Labyrinthe[line - i][column])
                 if 'O' in liste_du_parcour:
-                    print("Vous ne pouvez pas aller par là, il y'a un mur.")
+                    print("Vous ne pouvez pas faire ça, il y'a un mur.")
                     continue
                 else:
-                    Labyrinthe = labyrinthe_sans_perso(cartes[0], perso)
+                    Labyrinthe = labyrinthe_sans_perso(labyrinthe(carte), perso)
                     Labyrinthe[line - n][column] = 'X'
                     afficher_labyrinthe(Labyrinthe)
-                    if labyrinthe_sans_perso(cartes[0], perso)[line - n][column] == 'U':
+                    if labyrinthe_sans_perso(labyrinthe(carte), perso)[line - n][column] == 'U':
                         print("BRAVO vous vaez gagnez !!!")
                         deplacement = False
                         choix_labyrinthe = False
@@ -167,19 +166,25 @@ while continuer_partie:
                 for i in range(n+1):
                     liste_du_parcour.append(Labyrinthe[line + i][column])
                 if 'O' in liste_du_parcour:
-                    print("Vous ne pouvez pas aller par là, il y'a un mur")
+                    print("Vous ne pouvez pas faire ça, il y'a un mur")
                     continue
                 else:
-                    Labyrinthe = labyrinthe_sans_perso(cartes[0], perso)
+                    Labyrinthe = labyrinthe_sans_perso(labyrinthe(carte), perso)
                     Labyrinthe[line + n][column] = 'X'
                     afficher_labyrinthe(Labyrinthe)
-                    if labyrinthe_sans_perso(cartes[0], perso)[line + n][column] == 'U':
-                        print("BRAVO vous avez gagnez !!!")
+                    if labyrinthe_sans_perso(labyrinthe(carte), perso)[line + n][column] == 'U':
+                        print("BRAVO vous vaez gagnez !!!")
                         deplacement = False
                         choix_labyrinthe = False
                         continuer_partie = False
             elif len(direction) == 2 and direction[0] == 'Q':
-                pass
+                print("Vous n'avez pas saisi une commande valide")
             elif len(direction) == 1 and direction == "Q":
-                pass
+                enregistrer_labyrinthe(afficher_labyrinthe(Labyrinthe))
+                deplacement = False
+                choix_labyrinthe = False
+                continuer_partie = False
+
+
+
 
