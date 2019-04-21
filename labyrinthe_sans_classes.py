@@ -4,7 +4,7 @@ continuer_partie = True
 
 while continuer_partie:
     print("Labyrinthes existants :")
-    for i, nom_fichier in enumerate(os.listdir("cartes")):
+    for i, nom_fichier in enumerate(os.listdir("cartes")):# on parcour les fichier qui sont dans le dossier cartes
         if nom_fichier.endswith(".txt"):
             print(f"  {i + 1} - {nom_fichier[:-4]}")
         if nom_fichier == 'labyrinthe':
@@ -19,8 +19,8 @@ while continuer_partie:
             numero = int(numero)
             D = {}
             for i, nom_fichier in enumerate(os.listdir("cartes")):
-                if nom_fichier.endswith(".txt"):
-                    chemin = os.path.join("cartes", nom_fichier)
+                if nom_fichier.endswith(".txt"):# on stocke dans D le chemin des fichier txt qui contiennent
+                    chemin = os.path.join("cartes", nom_fichier)# les labyrinthe
                     D[i + 1] = chemin
                 if "labyrinthe" in os.listdir("cartes"):
                     if numero > len(D) + 1:
@@ -37,11 +37,11 @@ while continuer_partie:
             print("Vous n'avez pas saisi de nombre")
             continue
 
-        if numero in D.keys():
-            carte = D[numero]
+        if numero in D.keys():# si le joueur choisi un numero qui est dans D donc il a choisi un fichier txt et
+            carte = D[numero]# donc n'a pas choisi de continuer la partie
             Labyrinthe = labyrinthe(carte)
-        else:
-            with open(os.getcwd() +'\\cartes\\labyrinthe', 'rb') as fichier:
+        else:# puisque le numero n'est pas dans D.keys() donc le joueur à choisi de continuer la partie, alors on charge
+            with open(os.getcwd() +'\\cartes\\labyrinthe', 'rb') as fichier:# le labyrinthe correspondant
                 mon_depickler = pickle.Unpickler(fichier)
                 Labyrinthe = mon_depickler.load()
                 carte = 'cartes\\facile.txt'
@@ -51,14 +51,14 @@ while continuer_partie:
         while deplacement:
             direction = choisir_direction()
             perso = 'X'
-            line, column = position_robot(Labyrinthe, perso)
-            if len(direction) == 1:
+            line, column = position_robot(Labyrinthe, perso)# on récupere la position du ribit
+            if len(direction) == 1:# ici le joueur a fait n, s, e ou o
                 n = 1
-            if len(direction) == 2:
+            if len(direction) == 2:# le joueur à fait qq chose comme n5 ou s3 ou E2
                 n = int(direction[1])
             if direction[0] == 'E':
-                if n > len(Labyrinthe[line]) - column - 1:
-                    print("Vous ne pouvez pas faire ça")
+                if n > len(Labyrinthe[line]) - column - 1:# si on fait s5 on voit si 5 ne vas pas nous faire sortir
+                    print("Vous ne pouvez pas faire ça")# du labyrinthe
                     continue
                 liste_du_parcour = []
                 for i in range(n + 1):
